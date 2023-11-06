@@ -1,0 +1,84 @@
+{
+    "category":[
+        {
+            "name": "Clothing",
+            "subcategory":[
+                "Wedding",
+                "Formal",
+                "casual"
+            ]
+        },
+        {
+            "name": "Computer",
+            "subcategory":[
+                "Laptop",
+                "Desktop",
+                "Gaming Pc"
+            ]
+        },
+        {
+            "name": "Car",
+            "subcategory":[
+                "Sport car",
+                "Bikes",
+                "Bus"
+            ]
+        },
+        {
+            "name": "Kids & Toys",
+            "subcategory":[
+                "FootBall",
+                "Bat & Ball",
+                "Hockey"
+            ]
+        },
+        {
+            "name": "Sports",
+            "subcategory":[
+                "Hockey",
+                "Snokar",
+                "Road game",
+                "Cricket",
+                "Football",
+                "Mobile games"
+
+            ]
+        },
+        {
+            "name": "CellPhone",
+            "subcategory":[
+                "I-Phone",
+                "Android",
+                "Tablet"
+            ]
+        },
+        {
+            "name": "jewelery",
+            "subcategory":[
+                "Neck chain",
+                "Hand chain",
+                "Rings"
+            ]
+        },
+        {
+            "name": "Man Clothing",
+            "subcategory":[
+                "T-Shirt",
+                "Paint & Shirt",
+                "kurta"
+            ]
+        },
+        {
+            "name": "Furniture",
+            "subcategory":[
+                "Bad",
+                "Table",
+                "Chair"
+            ]
+        }
+        
+
+        
+
+    ]
+}
