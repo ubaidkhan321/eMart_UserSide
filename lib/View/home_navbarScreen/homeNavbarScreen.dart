@@ -1,7 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_app/Const/const.dart';
 import 'package:e_commerce_app/Const/list.dart';
+import 'package:e_commerce_app/Services/firebase.services.dart';
+import 'package:e_commerce_app/View/Category_navbar_Screen/itemdetail.dart';
+import 'package:e_commerce_app/View/home_navbarScreen/seaching_screen.dart';
 import 'package:e_commerce_app/Widget_Common/bodyButton.dart';
 import 'package:e_commerce_app/Widget_Common/bottombutton.dart';
+import 'package:e_commerce_app/controller/homecontroller.dart';
+import 'package:e_commerce_app/controller/product_controller.dart';
+import 'package:get/get.dart';
 
 class HomeNavbarScreen extends StatefulWidget {
   const HomeNavbarScreen({super.key});
@@ -11,6 +18,7 @@ class HomeNavbarScreen extends StatefulWidget {
 }
 
 class _HomeNavbarScreenState extends State<HomeNavbarScreen> {
+  var controller = Get.put(homecontroller());
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,14 +32,27 @@ class _HomeNavbarScreenState extends State<HomeNavbarScreen> {
           alignment: Alignment.center,
           height: 60,
           child: TextFormField(
-            decoration: const InputDecoration(
+            controller: controller.searchcontroller,
+            decoration:  InputDecoration(
                 fillColor: lightGrey,
                 filled: true,
                 hintText: searching,
-                suffixIcon: Icon(Icons.search),
-                enabledBorder: OutlineInputBorder(
+                
+                suffixIcon: const Icon(Icons.search).onTap(() {
+                  if(controller.searchcontroller.text.isNotEmptyAndNotNull){
+                    Get.to(()=>  SearchingScreen(title: controller.searchcontroller.text,));
+
+                  }
+                  
+                 }),
+                enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                )),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red, width: 2.0),
+                )
+                
+                ),
           ),
         ),
         5.heightBox,
@@ -130,7 +151,19 @@ class _HomeNavbarScreenState extends State<HomeNavbarScreen> {
                               )).toList()),
                 ),
                 10.heightBox,
-                Container(
+            StreamBuilder(
+              stream: Firebaseservice.getfuturedproduct(),
+              builder: (context , AsyncSnapshot<QuerySnapshot> snapshot){
+              if(!snapshot.hasData){
+                return const Center(child: CircularProgressIndicator(),);
+              }
+              if (snapshot.data!.docs.isEmpty){
+                return "No futured product".text.makeCentered();
+
+              }
+              else{
+                var futuredata = snapshot.data!.docs;
+                return     Container(
                     padding: const EdgeInsets.all(12),
                     width: double.infinity,
                     decoration: const BoxDecoration(
@@ -147,19 +180,19 @@ class _HomeNavbarScreenState extends State<HomeNavbarScreen> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: List.generate(
-                                6,
+                                futuredata.length,
                                 (index) => Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Image.asset(
-                                          imgP1,
+                                        Image.network(
+                                          futuredata[index]['p_img'][0],
                                           width: 150,
                                           fit: BoxFit.fill,
                                         ),
                                         10.heightBox,
-                                        "laptop 64/128 GB".text.gray600.make(),
-                                        "\$600"
+                                        "${futuredata[index]['p_name']}".text.gray600.make(),
+                                        "${futuredata[index]['p_price']}".numCurrency
                                             .text
                                             .red600
                                             .size(18)
@@ -173,11 +206,19 @@ class _HomeNavbarScreenState extends State<HomeNavbarScreen> {
                                         .margin(const EdgeInsets.symmetric(
                                             horizontal: 5))
                                         .padding(const EdgeInsets.all(8))
-                                        .make()),
+                                        .make().onTap(() {
+                                          Get.to(()=>  ItemDetailScreen(itemtitle: futuredata[index]['p_name'].toString(), data: futuredata[index]));
+                                        })
+                                        
+                                        )
                           ),
                         ),
                       ],
-                    )),
+                    ));
+              }
+
+
+            }),
                 15.heightBox,
                 VxSwiper.builder(
                     autoPlay: true,
@@ -195,36 +236,68 @@ class _HomeNavbarScreenState extends State<HomeNavbarScreen> {
                           .margin(const EdgeInsets.symmetric(horizontal: 5))
                           .make();
                     }),
-                    10.heightBox,
-                GridView.builder(
-                  physics:const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: 6,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,mainAxisSpacing: 8,crossAxisSpacing: 8,mainAxisExtent: 300,),
-                    itemBuilder: (context, index) {
-                      return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Image.asset(
-                                          imgPi1,
-                                          width: 150,
-                                          fit: BoxFit.fill,
-                                        ),
-                                         const Spacer(),
-                                        10.heightBox,
-                                        "laptop 64/128 GB".text.gray600.make(),
-                                        "\$600"
-                                            .text
-                                            .red600
-                                            .size(18)
-                                            .fontWeight(FontWeight.bold)
-                                            .make(),
-                                      ],
+                10.heightBox,
+                StreamBuilder(
+                    stream: Firebaseservice.getfuturedproduct(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        var data = snapshot.data!.docs;
+                        return GridView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: data.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 8,
+                              crossAxisSpacing: 8,
+                              mainAxisExtent: 300,
+                            ),
+                            itemBuilder: (context, index) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Image.network(
+                                    data[index]['p_img'][0],
+                                    width: 250,
+                                    height: 210,
+                                    fit: BoxFit.fill,
+                                  ),
+                                  const Spacer(),
+                                  10.heightBox,
+                                  "${data[index]['p_name']}"
+                                      .text
+                                      .gray600
+                                      .make(),
+                                  "${data[index]['p_price']}"
+                                      .text
+                                      .red600
+                                      .size(18)
+                                      .fontWeight(FontWeight.bold)
+                                      .make(),
+                                ],
+                              )
+                                  .box
+                                  .white
+                                  .margin(
+                                      const EdgeInsets.symmetric(horizontal: 4))
+                                  .padding(const EdgeInsets.all(8))
+                                  .roundedSM
+                                  .make()
+                                  .onTap(() {
+                                    Get.put(Productcontrol());
+                                Get.to(() => ItemDetailScreen(
                                     
-                      ).box.white.margin( const EdgeInsets.symmetric(horizontal: 4)).padding( const EdgeInsets.all(8)).roundedSM.make();
+                                    itemtitle: "${data[index]['p_name']}",
+                                    data: data[index]));
+                              });
+                            });
+                      }
                     })
               ],
             ),

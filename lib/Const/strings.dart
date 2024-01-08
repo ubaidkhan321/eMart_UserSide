@@ -66,3 +66,5 @@ const video = "Video",
 
     //profile button string
     const wishlist = "My WishList", order = "My Order",message = "Message";
+
+    const paypal = 'Paypal', Stripe = "Stripe", cod = "Cash on delivery";

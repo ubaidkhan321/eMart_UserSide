@@ -7,6 +7,9 @@ import 'package:e_commerce_app/Services/firebase.services.dart';
 import 'package:e_commerce_app/View/Auth_Screen/LoginScreen.dart';
 import 'package:e_commerce_app/View/Profile_navbar%20_Screen/EditProfileScreen.dart';
 import 'package:e_commerce_app/View/Profile_navbar%20_Screen/component/profiledetail.dart';
+import 'package:e_commerce_app/View/order_screen/message_on_profile.dart';
+import 'package:e_commerce_app/View/order_screen/order_on_profile.dart';
+import 'package:e_commerce_app/View/order_screen/wishlist_on_profile.dart';
 import 'package:e_commerce_app/Widget_Common/containerback.dart';
 import 'package:e_commerce_app/controller/ProfileimagerPick.dart';
 import 'package:e_commerce_app/controller/auth_controller.dart';
@@ -122,18 +125,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
                10.heightBox,
-               Padding(
+               FutureBuilder(
+                future: Firebaseservice.getcount(),
+                builder: (BuildContext context, AsyncSnapshot snapshot){
+                  if(!snapshot.hasData){
+                    return const Center(child: CircularProgressIndicator(),);
+
+                  }
+                  else{
+                    var countdata = snapshot.data;
+                    return  Padding(
                  padding: const EdgeInsets.all(8.0),
                  child: Row(
                   children: [
-                    profiledetail(count:data['cart_count'],title: "your cart",width: context.screenWidth/3.4),
-                    profiledetail(count: data['Wishlist_count'],title: "your wishList",width: context.screenWidth/3.4),
-                    profiledetail(count: data['order_count'],title: "your Order",width: context.screenWidth/3.4),
+                    profiledetail(count: countdata[0].toString(),title: "your cart",width: context.screenWidth/3.4),
+                    profiledetail(count: countdata[1].toString(),title: "your wishList",width: context.screenWidth/3.4),
+                    profiledetail(count: countdata[2].toString(),title: "your Order",width: context.screenWidth/3.4),
                   ],
                  ),
-               ),
+               );
+                  }
+
+               }),
+              
                
                ListView.separated(
+                
                 shrinkWrap: true,
                  separatorBuilder: (context,index){
                   return const Divider();
@@ -141,6 +158,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                  itemCount: profileiconlist.length,
                 itemBuilder: ( BuildContext context, int index){
                   return ListTile(
+                    onTap: (){
+                    switch (index) {
+                      case 0:
+                      Get.to(()=> const  OrderScreen());
+                       break;
+                       case 1:
+                        Get.to(()=> const  WishLishScreen());
+                       break;
+                       case 2 :
+                        Get.to(()=> const  MessageScreen());
+                       break;
+                      
+                     
+                    }
+
+                    },
                     title: profilelist[index].text.color(darkFontGrey).make(),
                     trailing: Image.asset(profileiconlist[index],width: 22,)
                   );

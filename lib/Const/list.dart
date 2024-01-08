@@ -26,4 +26,7 @@ const categoriesimages = [imgFc1,imgFc2,imgFc3,imgFc4,imgFc5,imgFc6,imgFc7,imgFc
 
  const profilelist = [order,wishlist,message];
  const  profileiconlist = [icWallet,icOrder,icMessages];
+// payment methode ...............................................
+ const paymentimg = [imgPaypal,imgStripe,imgCod];
+ const paymentname = [paypal,Stripe,cod];
 

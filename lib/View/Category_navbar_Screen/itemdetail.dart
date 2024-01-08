@@ -1,6 +1,7 @@
  import 'package:e_commerce_app/Const/const.dart';
 import 'package:e_commerce_app/Const/list.dart';
 import 'package:e_commerce_app/Const/toastmessage.dart';
+import 'package:e_commerce_app/View/chat_Screen/chat_screen.dart';
 import 'package:e_commerce_app/Widget_Common/Button.dart';
 import 'package:e_commerce_app/controller/product_controller.dart';
 import 'package:get/get.dart';
@@ -37,7 +38,17 @@ import 'package:get/get.dart';
             // Provide icons color from main.dart
             // set color in ThemeData then  set Icon color in main.dart
             IconButton(onPressed: (){}, icon: const Icon(Icons.share)),
-            IconButton(onPressed: (){}, icon: const Icon(Icons.favorite_outline_rounded)),
+            Obx(()=>
+               IconButton(onPressed: (){
+            
+               if(controller.isfav.value) {
+                controller.removefromwishlist(docid: data.id);
+               }
+               else{
+                controller.addfromwishlist(docid: data.id);
+               }
+              }, icon:  Icon(Icons.favorite_outlined,color: controller.isfav.value ? redColor : darkFontGrey,)),
+            ),
           ],
         ),
         body: Column(
@@ -94,8 +105,12 @@ import 'package:get/get.dart';
                             "${data["p_seller"]}".text.fontWeight(FontWeight.bold).size(18).make()
                           ],
                           ),
-                        const  CircleAvatar(
-                            child: Icon(Icons.message_rounded,color: darkFontGrey,),
+                          CircleAvatar(
+                            child: const Icon(Icons.message_rounded,color: darkFontGrey,).onTap(() {
+                              Get.to(()=> const ChatvViewSceen(),
+                              //argument..................................................................................
+                              arguments: [data['p_seller'],data['vendor_id']]);
+                             })
                           )
                         ],
                        ).box.color(textfieldGrey).padding( const EdgeInsets.all(8)).make(),
@@ -215,16 +230,24 @@ import 'package:get/get.dart';
           ButtonScreen(
             loading: loading,
             title: "Add to card", onpress: (){
-    
-              controller.addcart(
+              if(controller.productcount.value > 0) {
+                 controller.addcart(
                 title: data['p_name'],
                 procolor: data['p_color'][controller.colorindex.value],
                 img: data['p_img'][0],
                 sellername: data['p_seller'],
                 pquan:controller.productcount.value,
+                venderid: data['vendor_id'],
                 ptotal: controller.totalprice.value, );
                 Utils().toastMessage("Added to Cart");
                 
+
+              }
+              else{
+                Utils().toastMessage("product can't be 0");
+              }
+    
+             
             })
           ],
         )
