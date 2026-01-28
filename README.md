@@ -1,16 +1,33 @@
-# e_commerce_app
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="screenshots/register.jpg" width="200"><br>
+      <sub><b>Register</b></sub>
+    </td>
+    <td align="center">
+      <img src="screenshots/login.jpg" width="200"><br>
+      <sub><b>Login</b></sub>
+    </td>
+    <td align="center">
+      <img src="screenshots/home.jpg" width="200"><br>
+      <sub><b>Home</b></sub>
+    </td>
+   
+  </tr>
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  
+  <tr>
+      <td align="center">
+      <img src="screenshots/category.jpg" width="200"><br>
+      <sub><b>Category</b></sub>
+    </td>
+    <td align="center">
+      <img src="screenshots/profile.jpg" width="200"><br>
+      <sub><b>Profile</b></sub>
+    </td>
+    <td align="center">
+      <img src="screenshots/edit_profile.jpg" width="200"><br>
+      <sub><b>Edit_Profile</b></sub>
+    </td>
+  </tr>
+</table>
